@@ -31,9 +31,36 @@
                     <tr>
                         <td>{{ domain.domain }}</td>
                         <td>{{ domain.registrar_id }}</td>
-                        <td>{{ domain.status }}</td>
-                        <td>{{ domain.ssl_status }}</td>
-                        <td>{{ domain.http_response }}</td>
+                        <td>
+                            {% if domain.whois_results_last_row %}
+                                {% if 'Status' in domain.whois_results_last_row %}
+                                    {{ domain.whois_results_last_row }}
+                                {% else %}
+                                    None
+                                {% endif %}
+                            {% else %}
+                                None
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if domain.ssl_info_last_row %}
+                                {% if 'Expiration Date' in domain.ssl_info_last_row %}
+                                    {{ domain.ssl_info_last_row }}
+                                {% else %}
+                                    None
+                                {% endif %}
+                            {% else %}
+                                None
+                            {% endif %}
+                        </td>
+<td>
+    {% if domain.response_last_row %}
+        <span data-bs-toggle="tooltip" data-bs-placement="top" title="Last checked at: {{ domain.response_last_row[:domain.response_last_row.rfind('-')] }}">{{ domain.response_last_row.split(' ')|last }}</span>
+    {% else %}
+        ?
+    {% endif %}
+</td>
+
                         <td>{{ domain.note }}</td>
                     </tr>
                 {% endfor %}
