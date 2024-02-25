@@ -6,7 +6,7 @@ if [ $# -ne 1 ]; then
 fi
 
 domain=$1
-output_file="whois_results/$domain.txt"
+output_file="whois_results/$domain"
 
 # Ensure the 'whois_results' directory exists
 mkdir -p whois_results
