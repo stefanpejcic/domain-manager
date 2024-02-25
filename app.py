@@ -33,6 +33,18 @@ class Domain(db.Model):
     http_response = db.Column(db.Integer)
     note = db.Column(db.Text)
 
+
+
+@app.route('/login')
+def login():
+    return render_template('login.html')
+
+
+
+@app.route('/dashboard')
+def dashboard():
+    return render_template('index.html')
+
 @app.route('/domains/<username>')
 def show_domains(username):
     user = User.query.filter_by(username=username).first()
