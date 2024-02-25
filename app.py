@@ -1,5 +1,6 @@
 from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
+import os
 
 app = Flask(__name__)
 
@@ -32,16 +33,41 @@ class Domain(db.Model):
     http_response = db.Column(db.Integer)
     note = db.Column(db.Text)
 
-# Create routes
 @app.route('/domains/<username>')
 def show_domains(username):
     user = User.query.filter_by(username=username).first()
 
     if user:
         domains = Domain.query.filter_by(user_id=user.id).all()
+
+        for domain in domains:
+            # Construct file paths for each domain
+            response_file_path = f'responses/{domain.domain}'
+            ssl_info_file_path = f'ssl_info/{domain.domain}'
+            whois_results_file_path = f'whois_results/{domain.domain}'
+
+            # Check if files exist and get the last row from each
+            response_last_row = get_last_row(response_file_path)
+            ssl_info_last_row = get_last_row(ssl_info_file_path)
+            whois_results_last_row = get_last_row(whois_results_file_path)
+
+            # Update domain object with file information
+            domain.response_last_row = response_last_row
+            domain.ssl_info_last_row = ssl_info_last_row
+            domain.whois_results_last_row = whois_results_last_row
+
         return render_template('domains.html', user=user, domains=domains)
     else:
         return "User not found"
+
+# Helper function to get the last row from a file
+def get_last_row(file_path):
+    if os.path.exists(file_path):
+        with open(file_path, 'r') as file:
+            lines = file.readlines()
+            if lines:
+                return lines[-1]
+    return None
 
 
 if __name__ == '__main__':
