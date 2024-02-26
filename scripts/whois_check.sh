@@ -6,12 +6,16 @@ if [ $# -ne 1 ]; then
 fi
 
 domain=$1
-output_file="whois_results/$domain"
+timestamp=$(date +"%Y-%m-%d-%H-%M-%S")
+output_dir="whois_results/$domain"
+temporary_file="$output_dir/temp_$timestamp"
+output_file="$output_dir/$timestamp"
 
 # Ensure the 'whois_results' directory exists
-mkdir -p whois_results
+mkdir -p $output_dir
 
-timestamp=$(date +"%Y-%m-%d %H:%M:%S")
+# Find the most recent report, excluding symlinks
+latest_report=$(find $output_dir -type f -printf '%T+ %p\n' | sort -r | head -n 1 | cut -d' ' -f2-)
 
 # Check if 'whois' command is available
 if ! command -v whois &> /dev/null; then
@@ -23,21 +27,28 @@ fi
 # Check again if 'whois' is now available
 if command -v whois &> /dev/null; then
   whois_result=$(whois "$domain")
-
-  # Extract relevant information using awk
-  registration_date=$(echo "$whois_result" | awk '/Creation Date:/ {print substr($0, index($0,$3))}')
-  registrar=$(echo "$whois_result" | awk '/Registrar:/ {print substr($0, index($0,$2))}')
-  expiration_date=$(echo "$whois_result" | awk '/Registry Expiry Date:/ {print substr($0, index($0,$4))}')
-  status=$(echo "$whois_result" | awk '/Domain status:/ {print substr($0, index($0,$3))}')
-  dnssec=$(echo "$whois_result" | awk '/DNSSEC signed:/ {print substr($0, index($0,$4))}')
+  echo -e "$whois_result" > "$temporary_file"
   
-  # Extract nameservers, taking care to handle multiple lines
-  nameservers=$(echo "$whois_result" | awk '/DNS:/ {getline; print substr($0, index($0,$1))}')
-
-  # Save the extracted information to the output file
-  echo -e "$timestamp - Registration Date: $registration_date - Registrar: $registrar - Expiration Date: $expiration_date - Status: $status - DNSSEC: $dnssec - Name Servers: $nameservers" >> "$output_file"
-  
-  echo "WHOIS information saved to: $output_file"
+  if [ -n "$latest_report" ]; then
+    # Compare excluding the last line of both files
+    diff_output=$(diff <(head -n -1 "$latest_report") <(head -n -1 "$temporary_file"))
+    
+    if [ -z "$diff_output" ]; then
+      # No differences found (excluding the last line), so do not save the new file
+      echo "No WHOIS changes found."
+      rm "$temporary_file"
+      mv "$latest_report" "$output_file" #to update the date only..
+    else
+      # Differences found, save the new report
+      mv "$temporary_file" "$output_file"
+      echo "Changes detected. WHOIS information saved to: $output_file"
+    fi
+  else
+    # If this is the first report, save it
+    mv "$temporary_file" "$output_file"
+    echo "WHOIS information saved to: $output_file"
+  fi
 else
   echo "Failed to install 'whois'. Please install it manually and rerun the script."
+  rm "$temporary_file" # Clean up the temporary file if 'whois' installation fails
 fi
