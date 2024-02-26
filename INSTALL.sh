@@ -43,5 +43,16 @@ mysql -e "CREATE USER IF NOT EXISTS 'manager'@'localhost' IDENTIFIED BY 'ds732bf
 mysql -e "GRANT ALL PRIVILEGES ON domains.* TO 'manager'@'localhost';"
 mysql -e "FLUSH PRIVILEGES;"
 
+# Save the login info for bash scripts
+cat > db.cnf <<EOF
+[client]
+user = "manager"
+password = "ds732bfsd"
+host = "localhost"
+EOF
+
+chown root:root db.cnf
+
+
 # Restart MySQL service
 systemctl restart mysql
