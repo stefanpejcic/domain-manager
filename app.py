@@ -131,7 +131,7 @@ def parse_whois_data(directory_path):
             
             if 'domain status' in line_lower:
                 # Keep the entire line content from the match till the end of the line
-                details['status'] = line[line_lower.find('domain status'):].strip()
+                details['status'] = line[line_lower.find('domain status' )+ len('domain status:'):].strip()
             elif 'dnssec' in line_lower:
                 details['dnssec'] = line[line_lower.find('dnssec'):].strip()
             elif 'registrar:' in line_lower:
@@ -147,16 +147,19 @@ def parse_whois_data(directory_path):
             # for ns we need to conver both cases when whois returns "Name Servers" or just "DNS"
             # check for 'name server' in the line
             if 'name server' in line_lower:
-                dns_line = line[line_lower.find('name server'):].strip()
+                # Remove "Name Server:" from the beginning of the line
+                dns_line = line[line_lower.find('name server') + len('name server:'):].strip()
                 # Assuming that each 'Name Server' entry is on a separate line
                 if dns_line not in details['dns']:
                     details['dns'].append(dns_line)
             # If 'name server' is not found, then look for 'dns:'
             elif 'dns:' in line_lower:
-                dns_line = line[line_lower.find('dns:'):].strip()
+                # Remove "DNS: " from the beginning of the line
+                dns_line = line[line_lower.find('dns:') + len('dns:'):].strip()
                 # Assuming that each 'dns:' entry is on a separate line
                 if dns_line not in details['dns']:
                     details['dns'].append(dns_line)
+
 
 
     
