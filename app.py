@@ -22,7 +22,7 @@ class User(db.Model):
 
 
 # Define the Domains model
-class Domain(db.Model):
+class Domains(db.Model):
     __tablename__ = 'domains' 
     id = db.Column(db.Integer, primary_key=True)
     domain = db.Column(db.String(255), nullable=False)
@@ -50,7 +50,7 @@ def show_domains(username):
     user = User.query.filter_by(username=username).first()
 
     if user:
-        domains = Domain.query.filter_by(user_id=user.id).all()
+        domains = Domains.query.filter_by(user_id=user.id).all()
 
         for domain in domains:
             # Construct file paths for each domain
