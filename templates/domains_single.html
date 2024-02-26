@@ -24,16 +24,7 @@
           </div>
         </div>
       </div>
-      <!-- END Page Heading -->
-
-                            {% if whois_details %}
-                                    {{ whois_details }}
-                            {% else %}
-                                None
-                            {% endif %}
-
-
-      
+      <!-- END Page Heading -->    
       <!-- Page Section -->
       <div class="container mx-auto p-4 lg:p-8 xl:max-w-7xl">
         <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:gap-8">
@@ -43,9 +34,13 @@
               <dl>
                 <dt class="text-2xl font-bold">WhoIs</dt>
                 <dd class="text-sm font-medium text-neutral-500">
+                      {% if whois_details.status %}
                   <a href="http{{ whois_details.status.split('http')[-1]}}" target="_blank" data-bs-toggle="tooltip" data-bs-placement="top" title="http{{ whois_details.status.split('http')[-1] }}">
-            {{ whois_details.status.split('http')[0] | default('Not Available')}}
+Status: <strong>{{ whois_details.status.split('http')[0] | default('Not Available')}}</strong>
                   </a>
+            {% else %}
+Status: <strong>Not Available</strong>
+            {% endif %}
                 </dd>
               </dl>
               <div class="flex items-center text-sm font-medium text-emerald-500">
@@ -124,7 +119,7 @@ Expired
                 <dd class="text-sm font-medium text-neutral-500">
                   <ul>
                     {% for dns in whois_details.dns %}
-                      <li>{{ dns }}</li>
+                      <li>{{ dns.split(' - ')[0]}}</li>
                     {% endfor %}
                   </ul>
                 </dd>
@@ -135,7 +130,11 @@ Expired
               </div>
             </div>
             <div class="border-t border-neutral-100 px-5 py-3 text-xs font-medium text-neutral-500">
-              {{ whois_details.dnssec }}
+                  {% if whois_details.dnssec %}
+                  {{ whois_details.dnssec.split(':')[0]}}: <strong>{{ whois_details.dnssec.split(':')[-1]}}</strong>
+                  {% else %}
+                  DNSSEC: <strong>Unknown</strong>
+                  {% endif %}
             </div>
           </a>
           <!-- END Quick Statistics -->
