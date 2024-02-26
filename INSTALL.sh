@@ -53,6 +53,29 @@ EOF
 
 chown root:root db.cnf
 
-
 # Restart MySQL service
 systemctl restart mysql
+
+# Make all bash script executable
+chmod +x -R scripts/
+
+
+# Set cron to check SSL status, HTTP response and WHOIS information
+SCRIPT_PATH="/root/domain-manager-main/scripts/scheduler.sh"
+
+# Prepare cron job lines
+CRON_JOBS=(
+    "*/5 * * * * $SCRIPT_PATH http_response_check"
+    "0 0 * * * $SCRIPT_PATH ssl_check"
+    "0 */6 * * * $SCRIPT_PATH whois_check"
+)
+
+# Backup current crontab
+crontab -l > crontab_backup.txt
+
+# Check and add each cron job if it doesn't already exist
+for job in "${CRON_JOBS[@]}"; do
+    crontab -l | grep -qF -- "$job" || (crontab -l; echo "$job") | crontab -
+done
+
+echo "Cron jobs added successfully."
