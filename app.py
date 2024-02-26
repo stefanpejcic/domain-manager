@@ -132,13 +132,18 @@ def parse_whois_data(directory_path):
             if 'domain status' in line_lower:
                 # Keep the entire line content from the match till the end of the line
                 details['status'] = line[line_lower.find('domain status'):].strip()
-            elif 'expiration date' in line_lower:
-                details['expiration'] = line[line_lower.find('expiration date'):].strip()
             elif 'dnssec' in line_lower:
                 details['dnssec'] = line[line_lower.find('dnssec'):].strip()
             elif 'registrar' in line_lower:
                 details['registrar'] = line[line_lower.find('registrar'):].strip()
 
+
+            if 'expiration date' in line_lower:
+                details['expiration'] = line[line_lower.find('expiration date'):].strip()
+                #fix for .club domains
+            elif 'expiry date' in line_lower:
+                details['expiration'] = line[line_lower.find('expiry date'):].strip()
+            
             # for ns we need to conver both cases when whois returns "Name Servers" or just "DNS"
             # check for 'name server' in the line
             if 'name server' in line_lower:
