@@ -81,25 +81,25 @@
             <!-- Desktop Navigation -->
             <nav class="hidden items-center gap-2 lg:flex">
               <a
-                href="javascript:void(0)"
+                href="/dashboard"
                 class="group flex items-center gap-2 rounded-lg bg-neutral-100 px-3 py-1.5 text-sm font-medium text-neutral-950"
               >
                 <span>Overview</span>
               </a>
               <a
-                href="javascript:void(0)"
+                href="/domains/stefan"
                 class="group flex items-center gap-2 rounded-lg px-3 py-1.5 text-sm font-medium text-neutral-800 hover:bg-neutral-100 hover:text-neutral-950 active:bg-neutral-50"
               >
                 <span>Domains</span>
               </a>
               <a
-                href="javascript:void(0)"
+                href="/activity"
                 class="group flex items-center gap-2 rounded-lg px-3 py-1.5 text-sm font-medium text-neutral-800 hover:bg-neutral-100 hover:text-neutral-950 active:bg-neutral-50"
               >
                 <span>Activity</span>
               </a>
               <a
-                href="javascript:void(0)"
+                href="/settings"
                 class="group flex items-center gap-2 rounded-lg px-3 py-1.5 text-sm font-medium text-neutral-800 hover:bg-neutral-100 hover:text-neutral-950 active:bg-neutral-50"
               >
                 <span>Settings</span>
@@ -268,7 +268,7 @@
                     clip-rule="evenodd"
                   />
                 </svg>
-                <span class="hidden sm:inline">John</span>
+                <span class="hidden sm:inline">Stefan</span>
                 <svg
                   class="hi-mini hi-chevron-down hidden h-5 w-5 opacity-40 sm:inline-block"
                   xmlns="http://www.w3.org/2000/svg"
@@ -305,7 +305,7 @@
                 >
                   <a
                     role="menuitem"
-                    href="javascript:void(0)"
+                    href="/settings/account"
                     class="group flex items-center justify-between gap-1.5 px-4 py-1.5 text-sm font-medium text-neutral-700 hover:bg-neutral-100 hover:text-neutral-950"
                   >
                     <span class="grow">Account</span>
@@ -316,7 +316,7 @@
                   </a>
                   <a
                     role="menuitem"
-                    href="javascript:void(0)"
+                    href="/settings"
                     class="group flex items-center justify-between gap-1.5 px-4 py-1.5 text-sm font-medium text-neutral-700 hover:bg-neutral-100 hover:text-neutral-950"
                   >
                     <span class="grow">Settings</span>
@@ -326,15 +326,13 @@
                     >
                   </a>
                   <hr class="my-2.5 border-neutral-100" />
-                  <form onsubmit="return false;">
-                    <button
-                      type="submit"
-                      role="menuitem"
+                  <a
+                    role="menuitem"
+                    href="/login"
                       class="group flex w-full items-center justify-between gap-1.5 px-4 py-1.5 text-start text-sm font-medium text-neutral-700 hover:bg-neutral-100 hover:text-neutral-950"
                     >
                       <span class="grow">Sign out</span>
-                    </button>
-                  </form>
+                    </a>
                 </div>
               </div>
               <!-- END Dropdown -->
