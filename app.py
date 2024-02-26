@@ -61,7 +61,7 @@ def show_domains(username):
             # Check if files exist and get the last row from each
             response_last_row = get_last_row(response_file_path)
             ssl_info_last_row = get_last_row(ssl_info_file_path)
-            whois_results_last_row = get_last_row(whois_results_file_path)
+            whois_results_last_row = parse_whois_data(whois_results_file_path)
 
             # Update domain object with file information
             domain.response_last_row = response_last_row
@@ -89,6 +89,8 @@ def get_all_rows(file_path):
             return lines  # Return all lines
     return []
 
+
+
 # helper for single doamin page
 class Domain:
     def __init__(self, name):
@@ -97,24 +99,84 @@ class Domain:
         self.ssl_info_last_row = None
         self.whois_results_last_row = None
 
+import os
+
+def parse_whois_data(directory_path):
+    # Check if the directory exists
+    if not os.path.exists(directory_path) or not os.path.isdir(directory_path):
+        print(f"Directory '{directory_path}' does not exist.")
+        return {}
+    
+    # Get all files in the directory
+    all_files = [os.path.join(directory_path, f) for f in os.listdir(directory_path)]
+    
+    # Filter out directories, leaving only files
+    all_files = [f for f in all_files if os.path.isfile(f)]
+    
+    # Find the newest file based on modification time
+    newest_file = max(all_files, key=os.path.getmtime)
+    
+    # Initialize 'details' if not already done:
+    details = {'dns': []}
+    
+    # Assuming 'newest_file' is the path to the file you want to read.
+    with open(newest_file, 'r') as file:
+        # Read the entire file content and split by lines
+        content = file.read()
+        lines = content.split('\n')
+        
+        for line in lines:
+            # Convert the line to lowercase for case-insensitive comparison
+            line_lower = line.lower()
+            
+            if 'domain status' in line_lower:
+                # Keep the entire line content from the match till the end of the line
+                details['status'] = line[line_lower.find('domain status'):].strip()
+            elif 'expiration date' in line_lower:
+                details['expiration'] = line[line_lower.find('expiration date'):].strip()
+            elif 'dnssec' in line_lower:
+                details['dnssec'] = line[line_lower.find('dnssec'):].strip()
+            elif 'registrar' in line_lower:
+                details['registrar'] = line[line_lower.find('registrar'):].strip()
+
+            # for ns we need to conver both cases when whois returns "Name Servers" or just "DNS"
+            # check for 'name server' in the line
+            if 'name server' in line_lower:
+                dns_line = line[line_lower.find('name server'):].strip()
+                # Assuming that each 'Name Server' entry is on a separate line
+                if dns_line not in details['dns']:
+                    details['dns'].append(dns_line)
+            # If 'name server' is not found, then look for 'dns:'
+            elif 'dns:' in line_lower:
+                dns_line = line[line_lower.find('dns:'):].strip()
+                # Assuming that each 'dns:' entry is on a separate line
+                if dns_line not in details['dns']:
+                    details['dns'].append(dns_line)
+
+
+    
+    return details
+    
+
+
+
 
 @app.route('/domains/<username>/<domain_name>')
 def show_domain_detail(username, domain_name):
-    # Assuming you have a function get_last_row that reads the last row from a file
     domain = Domain(domain_name)  # Create a Domain object
 
     # Construct file paths for each domain
     response_file_path = f'responses/{domain_name}'
     ssl_info_file_path = f'ssl_info/{domain_name}'
-    whois_results_file_path = f'whois_results/{domain_name}'
 
     # Check if files exist and get the last row from each
     domain.response_last_row = get_last_row(response_file_path)
     domain.ssl_info_last_row = get_last_row(ssl_info_file_path)
-    domain.whois_results_last_row = get_last_row(whois_results_file_path)
-
-    # Pass the domain object to your template
-    return render_template('domains_single.html', user=username, domain=domain)
+    
+    #domain.whois_results_last_row = get_all_rows(whois_results_file_path)
+    whois_dir_for_domain = f'whois_results/{domain_name}'
+    whois_details = parse_whois_data(whois_dir_for_domain)
+    return render_template('domains_single.html', user=username, domain=domain, whois_details=whois_details)
 
 
 
