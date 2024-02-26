@@ -32,7 +32,7 @@
           <span class="flex flex-col rounded-lg border border-neutral-200 bg-white hover:border-neutral-300 active:border-neutral-200">
             <div class="flex grow items-center justify-between p-5">
               <dl>
-                <dt class="text-2xl font-bold">WhoIs</dt>
+                <dt class="text-2xl font-bold">WHOIS</dt>
                 <dd class="text-sm font-medium text-neutral-500">
                       {% if whois_details.status %}
                   <a href="http{{ whois_details.status.split('http')[-1]}}" target="_blank" data-bs-toggle="tooltip" data-bs-placement="top" title="http{{ whois_details.status.split('http')[-1] }}">
@@ -118,9 +118,9 @@ Expired
                 <dt class="text-2xl font-bold">DNS</dt>
                 <dd class="text-sm font-medium text-neutral-500">
                   <ul>
-                    {% for dns in whois_details.dns %}
-                      <li>{{ dns.split(' - ')[0]}}</li>
-                    {% endfor %}
+                  {% for dns in whois_details.dns %}
+                    <li>{{ dns.split(' - ')[0] | lower }}</li>
+                  {% endfor %}
                   </ul>
                 </dd>
               </dl>
