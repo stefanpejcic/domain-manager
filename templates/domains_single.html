@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Domains</title>
+    <!-- Include Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-4">
+        <p><strong>Username:</strong> {{ user.username }}</p>
+        <!-- Add other user-related information if needed -->
+
+        <h2 class="mt-4">User Domains</h2>
+        <table class="table table-bordered mt-3">
+            <thead>
+                <tr>
+                    <th scope="col">Status</th>
+                    <th scope="col">SSL Status</th>
+                    <th scope="col">HTTP Response</th>
+                </tr>
+            </thead>
+            <tbody>
+                    <tr>
+                        <td>
+                            {% if domain.whois_results_last_row %}
+                                {% if 'Status' in domain.whois_results_last_row %}
+                                    {{ domain.whois_results_last_row }}
+                                {% else %}
+                                    None
+                                {% endif %}
+                            {% else %}
+                                None
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if domain.ssl_info_last_row %}
+                                {% if 'Expiration Date' in domain.ssl_info_last_row %}
+                                    {{ domain.ssl_info_last_row }}
+                                {% else %}
+                                    None
+                                {% endif %}
+                            {% else %}
+                                None
+                            {% endif %}
+                        </td>
+<td>
+    {% if domain.response_last_row %}
+        <span data-bs-toggle="tooltip" data-bs-placement="top" title="Last checked at: {{ domain.response_last_row[:domain.response_last_row.rfind('-')] }}">{{ domain.response_last_row.split(' ')|last }}</span>
+    {% else %}
+        ?
+    {% endif %}
+</td>
+                    </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Include Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"></script>
+</body>
+</html>
