@@ -81,25 +81,25 @@
             <!-- Desktop Navigation -->
             <nav class="hidden items-center gap-2 lg:flex">
               <a
-                href="/dashboard"
+                href="javascript:void(0)"
                 class="group flex items-center gap-2 rounded-lg bg-neutral-100 px-3 py-1.5 text-sm font-medium text-neutral-950"
               >
                 <span>Overview</span>
               </a>
               <a
-                href="/domains"
+                href="javascript:void(0)"
                 class="group flex items-center gap-2 rounded-lg px-3 py-1.5 text-sm font-medium text-neutral-800 hover:bg-neutral-100 hover:text-neutral-950 active:bg-neutral-50"
               >
                 <span>Domains</span>
               </a>
               <a
-                href="/activity"
+                href="javascript:void(0)"
                 class="group flex items-center gap-2 rounded-lg px-3 py-1.5 text-sm font-medium text-neutral-800 hover:bg-neutral-100 hover:text-neutral-950 active:bg-neutral-50"
               >
                 <span>Activity</span>
               </a>
               <a
-                href="/settings"
+                href="javascript:void(0)"
                 class="group flex items-center gap-2 rounded-lg px-3 py-1.5 text-sm font-medium text-neutral-800 hover:bg-neutral-100 hover:text-neutral-950 active:bg-neutral-50"
               >
                 <span>Settings</span>
@@ -268,7 +268,7 @@
                     clip-rule="evenodd"
                   />
                 </svg>
-                <span class="hidden sm:inline">Stefan</span>
+                <span class="hidden sm:inline">John</span>
                 <svg
                   class="hi-mini hi-chevron-down hidden h-5 w-5 opacity-40 sm:inline-block"
                   xmlns="http://www.w3.org/2000/svg"
@@ -404,6 +404,10 @@
     <!-- Page Content -->
     <main id="page-content" class="flex max-w-full flex-auto flex-col">
 
+{% block content %}{% endblock %}
+
+
+      
     </main>
     <!-- END Page Content -->
 
