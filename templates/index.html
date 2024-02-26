@@ -5,7 +5,11 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1.0" />
 
+    {% if domain %}
+    <title>{{domain.name}} - Domain Manager</title>
+    {% else %}
     <title>Domain Manager</title>
+    {% endif %}
 
     <!-- Inter web font from bunny.net (GDPR compliant) -->
     <link rel="preconnect" href="https://fonts.bunny.net" />
