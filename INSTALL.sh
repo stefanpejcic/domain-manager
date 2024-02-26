@@ -37,5 +37,11 @@ mysql -e "USE domains;"
 # Import table structure from file
 mysql domains < table_structure.sql
 
+
+# Create user 'manager' with password 'ds732bfsd' and grant all privileges on 'domains' database
+mysql -e "CREATE USER IF NOT EXISTS 'manager'@'localhost' IDENTIFIED BY 'ds732bfsd';"
+mysql -e "GRANT ALL PRIVILEGES ON domains.* TO 'manager'@'localhost';"
+mysql -e "FLUSH PRIVILEGES;"
+
 # Restart MySQL service
 systemctl restart mysql
