@@ -38,14 +38,14 @@
       <div class="container mx-auto p-4 lg:p-8 xl:max-w-7xl">
         <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:gap-8">
           <!-- Quick Statistics -->
-          <a href="http{{ whois_details.status.split('http')[-1]}}" target="_blank" class="flex flex-col rounded-lg border border-neutral-200 bg-white hover:border-neutral-300 active:border-neutral-200">
+          <span class="flex flex-col rounded-lg border border-neutral-200 bg-white hover:border-neutral-300 active:border-neutral-200">
             <div class="flex grow items-center justify-between p-5">
               <dl>
                 <dt class="text-2xl font-bold">WhoIs</dt>
                 <dd class="text-sm font-medium text-neutral-500">
-                  <span data-bs-toggle="tooltip" data-bs-placement="top" title="{{ whois_details.status.split('http')[-1] }}">
+                  <a href="http{{ whois_details.status.split('http')[-1]}}" target="_blank" data-bs-toggle="tooltip" data-bs-placement="top" title="http{{ whois_details.status.split('http')[-1] }}">
             {{ whois_details.status.split('http')[0] | default('Not Available')}}
-                  </span>
+                  </a>
                 </dd>
               </dl>
               <div class="flex items-center text-sm font-medium text-emerald-500">
@@ -54,9 +54,12 @@
               </div>
             </div>
             <div class="border-t border-neutral-100 px-5 py-3 text-xs font-medium text-orange-500">
-{{ whois_details.registrar }} {{ whois_details.expiration }}
+<a href="#" target="" class="">
+{{ whois_details.registrar }}
+</a>
+</br>{{ whois_details.expiration }}
             </div>
-          </a>
+          </span>
           <a href="javascript:void(0)" class="flex flex-col rounded-lg border border-neutral-200 bg-white hover:border-neutral-300 active:border-neutral-200">
             <div class="flex grow items-center justify-between p-5">
               <dl>
