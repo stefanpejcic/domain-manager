@@ -134,7 +134,7 @@ def parse_whois_data(directory_path):
                 details['status'] = line[line_lower.find('domain status'):].strip()
             elif 'dnssec' in line_lower:
                 details['dnssec'] = line[line_lower.find('dnssec'):].strip()
-            elif 'registrar' in line_lower:
+            elif 'registrar:' in line_lower:
                 details['registrar'] = line[line_lower.find('registrar'):].strip()
 
 
