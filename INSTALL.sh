@@ -19,10 +19,10 @@ pip install Flask
 pip install flask_sqlalchemy
 
 # Install MySQL client
-apt-get install python3-mysqldb
+apt-get install python3-mysqldb  -y
 
 # Install additional dependencies
-apt-get install pkg-config libmysqlclient-dev
+apt-get install pkg-config libmysqlclient-dev  -y
 
 # Install mysqlclient
 pip install mysqlclient --global-option=build_ext --global-option="-I/usr/include/mysql" --global-option="-L/usr/lib/x86_64-linux-gnu -lmysqlclient"
