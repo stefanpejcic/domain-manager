@@ -141,7 +141,7 @@ def show_domains(username):
         
         # Load the user's existing data
         user_data = load_user_data(username)
-
+        existing_domains = [domain['name'] for domain in user_data.get("domains", [])]
         domains_count = len(existing_domains)
         domains_limit = user_data.get("domains_limit", 0)
 
@@ -149,7 +149,7 @@ def show_domains(username):
             return "Reached limit in number of domains", 400
         
         # Check if the domain already exists
-        existing_domains = [domain['name'] for domain in user_data.get("domains", [])]
+        
         if domain_name in existing_domains:
             return "Domain already exists", 400
 
