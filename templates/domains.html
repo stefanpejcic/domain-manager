@@ -139,8 +139,6 @@
 document.getElementById('importDomainsForm').addEventListener('submit', function(event) {
   event.preventDefault();
   const domains = document.getElementById('domains').value.trim();
-
-  // Send PUT request to backend
   fetch('/domains/{{ username }}', {
     method: 'PUT',
     headers: {
@@ -149,15 +147,18 @@ document.getElementById('importDomainsForm').addEventListener('submit', function
     body: domains,
   })
   .then(response => {
-    if (!response.ok) {
+    if (response.ok) {
+      return response.text();
+    } else {
       throw new Error('Request failed with status ' + response.status);
     }
-    // Redirect to the domains page after PUT request is successful
-    window.location.href = '/domains/{{ username }}';  // Redirect to the same page
+  })
+  .then(data => {
+    console.log('Success:', data);
+    window.location.href = '/domains/{{ username }}';
   })
   .catch(error => {
     console.error('Error:', error);
-    // Handle error if needed
   });
 });
 
