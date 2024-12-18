@@ -192,7 +192,7 @@ def show_domains(username):
         total_domains_count = domains_count + len(domain_names)
     
         if total_domains_count > domains_limit:
-            flash(f"Cannot add more domains. Reached the limit of {domains_limit} domains ({domains_count}/{domains_limit}).", "error")
+            flash(f"Import failed. Adding these domains would exceed the limit of {domains_limit} domains. Currently, you have {domains_count} domains out of the allowed {domains_limit}.", "error")
             return redirect(url_for('show_domains', username=username))
     
         new_domains = []
