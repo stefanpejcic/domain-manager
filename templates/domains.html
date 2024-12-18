@@ -3,6 +3,54 @@
 {% block content %}
 
 
+{% with messages = get_flashed_messages(with_categories=True) %}
+  {% if messages %}
+    {% for title, category, message in messages %}
+<!-- Alerts: {{ category }} -->
+
+      <div class="
+        {% if category == 'success' %}
+          rounded bg-emerald-100 p-4 text-emerald-700 md:p-5 dark:bg-emerald-900/75 dark:text-emerald-100
+        {% elif category == 'error' %}
+          rounded bg-red-100 p-4 text-red-700 md:p-5 dark:bg-red-900/75 dark:text-red-100
+        {% elif category == 'warning' %}
+          rounded bg-yellow-100 p-4 text-yellow-700 md:p-5 dark:bg-yellow-900/75 dark:text-yellow-100
+        {% elif category == 'info' %}
+          rounded bg-blue-100 p-4 text-blue-700 md:p-5 dark:bg-blue-900/75 dark:text-blue-100
+        {% endif %}
+      ">
+        <div class="mb-2 flex items-center">
+          {% if category == 'success' %}
+            <svg class="hi-solid hi-check-circle mr-3 inline-block size-5 flex-none text-emerald-500 dark:text-emerald-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+            </svg>
+          {% elif category == 'error' %}
+            <svg class="hi-solid hi-x-circle mr-3 inline-block size-5 flex-none text-red-500 dark:text-red-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm4-12a1 1 0 00-1.414 1.414L10 9.414l-2.586-2.586A1 1 0 006 8l2.586 2.586L6 13.172a1 1 0 101.414 1.414L10 10.586l2.586 2.586a1 1 0 001.414-1.414L11.414 10l2.586-2.586A1 1 0 0014 6z" clip-rule="evenodd" />
+            </svg>
+          {% elif category == 'warning' %}
+            <svg class="hi-solid hi-exclamation-circle mr-3 inline-block size-5 flex-none text-yellow-500 dark:text-yellow-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm-1-9a1 1 0 112 0v4a1 1 0 11-2 0V9zM9 13a1 1 0 112 0 1 1 0 11-2 0z" clip-rule="evenodd" />
+            </svg>
+          {% elif category == 'info' %}
+            <svg class="hi-solid hi-information-circle mr-3 inline-block size-5 flex-none text-blue-500 dark:text-blue-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 112 0v6a1 1 0 11-2 0V7zm0 8a1 1 0 112 0 1 1 0 11-2 0z" clip-rule="evenodd" />
+            </svg>
+          {% endif %}
+          <h3 class="font-semibold">{{ title }}</h3>
+        </div>
+        <p class="ml-8">{{ message }}</p>
+      </div>
+<!-- END Alerts: {{ category }} -->
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+
+
+
+
+
+
 <!-- Modal -->
 <div id="addDomainModal" class="fixed inset-0 z-50 hidden overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
   <div class="flex items-end justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
