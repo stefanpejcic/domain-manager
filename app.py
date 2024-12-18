@@ -132,9 +132,9 @@ def show_domains(username):
         
         # Fetch the last row of relevant files for each domain
         for domain in domains:
-            response_file_path = f"scripts/responses/{domain['name']}"
-            ssl_info_file_path = f"scripts/ssl_info/{domain['name']}"
-            whois_results_file_path = f"scripts/whois_results/{domain['name']}"
+            response_file_path = f"responses/{domain['name']}"
+            ssl_info_file_path = f"ssl_info/{domain['name']}"
+            whois_results_file_path = f"whois_results/{domain['name']}"
 
             response_last_row = get_last_row(response_file_path)
             ssl_info_last_row = get_last_row(ssl_info_file_path)
@@ -299,12 +299,12 @@ def show_domain_detail(username, domain_name):
             flash(f"Domain { domain_name } not found", "error")
             return redirect(url_for('show_domains', username=username))
     
-        response_file_path = f'scripts/responses/{domain_name}'
-        ssl_info_file_path = f'scripts/ssl_info/{domain_name}'
+        response_file_path = f'responses/{domain_name}'
+        ssl_info_file_path = f'ssl_info/{domain_name}'
         domain.response_last_row = get_last_row(response_file_path)
         domain.ssl_info_last_row = get_last_row(ssl_info_file_path)
     
-        whois_dir_for_domain = f'scripts/whois_results/{domain_name}'
+        whois_dir_for_domain = f'whois_results/{domain_name}'
         whois_details = parse_whois_data(whois_dir_for_domain)
         return render_template('domains_single.html', username=username, domain=domain, whois_details=whois_details)
 
