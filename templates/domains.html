@@ -58,7 +58,7 @@
           </div>
           <div class="flex flex-none items-center justify-center gap-2 rounded sm:justify-end">
             <div class="relative">
-<a href="javascript:void(0)" {% if domains_limit === domains|length %} {% else %}onclick="toggleModal('addDomainModal')"{% endif } class="inline-flex items-center justify-center gap-2 rounded-lg border border-neutral-200 bg-black text-white px-3 py-2 text-sm font-semibold leading-5 text-neutral-800 hover:border-neutral-300 active:border-neutral-200">
+<a href="javascript:void(0)" onclick="{% if domains_limit != domains|length %}toggleModal('addDomainModal'){% endif %}" class="inline-flex items-center justify-center gap-2 rounded-lg border border-neutral-200 bg-black text-white px-3 py-2 text-sm font-semibold leading-5 text-neutral-800 hover:border-neutral-300 active:border-neutral-200">
   <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-plus" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 5l0 14" /><path d="M5 12l14 0" /></svg>Add
 </a>
             </div>
