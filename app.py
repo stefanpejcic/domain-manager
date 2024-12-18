@@ -177,7 +177,12 @@ def show_domains(username):
     
         if not domain_list:
             flash(f"Domain list is required for import.", "error")
-            return redirect(url_for('show_domains', username=username))
+            response_data = {
+                "successDomains": 0,
+                "skippedDomains": 0
+            }
+        
+            return jsonify(response_data)
     
         # Split domains by lines or commas
         domain_names = re.split(r'[,\n]+', domain_list)
@@ -193,8 +198,14 @@ def show_domains(username):
     
         if total_domains_count > domains_limit:
             flash(f"Import failed. Adding these domains would exceed the limit of {domains_limit} domains. Currently, you have {domains_count} domains out of the allowed {domains_limit}.", "error")
-            return redirect(url_for('show_domains', username=username))
-    
+            response_data = {
+                "successDomains": 0,
+                "skippedDomains": len(domain_names)
+            }
+        
+            return jsonify(response_data)
+
+        
         new_domains = []
         skipped_domains = []
     
