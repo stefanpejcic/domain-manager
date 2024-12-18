@@ -6,10 +6,10 @@ SCRIPTS_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 USERS_DIR="${SCRIPTS_DIR}/../users/"
 
 # valid check types
-$ALL="--all"
-$HTTP="http_response_check"
-$SSL="ssl_check"
-$WHOIS="whois_check"
+ALL="--all"
+HTTP="http_response_check"
+SSL="ssl_check"
+WHOIS="whois_check"
 
 usage() {
     echo "Usage: $0 [$ALL|$HTTP|$SSL|$WHOIS] [username]"
