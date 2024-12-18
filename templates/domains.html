@@ -256,9 +256,11 @@ document.getElementById('importDomainsForm').addEventListener('submit', function
                             {% set status_parts = domain.whois_results_last_row.status.split(' ') %}
                             {% for part in status_parts %}
                                 {% if loop.index == 2 and part.startswith('http') %}
+                                    {% if 'ok' in status_parts[0] or 'Active' in status_parts[0] %}
+                                    <a href="{{ part }}" target="_blank">Active</a>
+                                    {% else %}
                                     <a href="{{ part }}" target="_blank">{{ status_parts[0] }}</a>
-                                {% else %}
-                                    {{ part }}
+                                    {% endif %}
                                 {% endif %}
                             {% endfor %}
                         {% else %}
