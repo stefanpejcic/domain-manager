@@ -23,10 +23,12 @@ check_domain() {
     local domain=$1
     local check_script=$2
     local timeout=$3
+    local script_name=$(basename "$check_script")
     if ! timeout "$timeout" bash "$check_script" "$domain"; then
-        echo "$check_script failed for $domain after $timeout seconds"
+        echo "$script_name failed for $domain after $timeout seconds"
     fi
 }
+
 
 for user_file in $USERS_DIR*.json; do
     DOMAINS=$(jq -r '.domains[].name' "$user_file")
