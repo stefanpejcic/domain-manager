@@ -11,15 +11,23 @@ for user_file in $USERS_DIR*.json; do
     
     for domain in $DOMAINS; do
       case $CHECK_TYPE in
+        --all)
+          echo "$domain"
+          bash /root/domain-manager/scripts/http_response_check.sh $domain
+          bash /root/domain-manager/scripts/ssl_check.sh $domain
+          bash /root/domain-manager/scripts/whois_check.sh $domain
+          echo "____________________________________________________________"
+          ;;
         http_response_check)
-          bash /root/domain-manager-main/scripts/http_response_check.sh $domain
+          bash /root/domain-manager/scripts/http_response_check.sh $domain
           ;;
         ssl_check)
-          bash /root/domain-manager-main/scripts/ssl_check.sh $domain
+          bash /root/domain-manager/scripts/ssl_check.sh $domain
           ;;
         whois_check)
-          bash /root/domain-manager-main/scripts/whois_check.sh $domain
+          bash /root/domain-manager/scripts/whois_check.sh $domain
           ;;
+
         *)
           echo "Invalid check type specified"
           exit 1
