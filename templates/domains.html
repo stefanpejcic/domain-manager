@@ -253,9 +253,16 @@ document.getElementById('importDomainsForm').addEventListener('submit', function
                       </td>
                       <td class="p-3 text-start">
                             {% if domain.whois_results_last_row %}
-                                {{ domain.whois_results_last_row.status }}
+                                {% set status_parts = domain.whois_results_last_row.status.split(' ') %}
+                                {% for part in status_parts %}
+                                    {% if part.startswith('http') %}
+                                        <a href="{{ part }}" target="_blank">{{ part }}</a>
+                                    {% else %}
+                                        {{ part }}
+                                    {% endif %}
+                                {% endfor %}
                             {% else %}
-                                None
+                                Unknown
                             {% endif %}
                       </td>
                       <td class="p-3 font-medium">
