@@ -140,7 +140,7 @@ document.getElementById('importDomainsForm').addEventListener('submit', function
   event.preventDefault();
   const domains = document.getElementById('domains').value.trim();
   fetch('/domains/{{ username }}', {
-    method: 'PUT',
+    method: 'PATCH',
     headers: {
       'Content-Type': 'text/plain',
     },
