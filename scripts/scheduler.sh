@@ -44,7 +44,7 @@ check_domain() {
 if [ "$CHECK_TYPE" == "help" ]; then
     help
     exit 0
-if [[ "$CHECK_TYPE" != "$ALL" && "$CHECK_TYPE" != "$HTTP" && "$CHECK_TYPE" != "$SSL" && "$CHECK_TYPE" != "$WHOIS" ]]; then
+elif [[ "$CHECK_TYPE" != "$ALL" && "$CHECK_TYPE" != "$HTTP" && "$CHECK_TYPE" != "$SSL" && "$CHECK_TYPE" != "$WHOIS" ]]; then
     usage
     exit 1
 fi
