@@ -103,7 +103,7 @@ def dashboard():
 def login():
     return render_template('login.html')
 
-@app.route('/domains/<username>', methods=['GET', 'POST', 'DELETE'])
+@app.route('/domains/<username>', methods=['GET', 'POST', 'PUT', 'DELETE'])
 def show_domains(username):
     if not user_exists(username):
         return "User not found", 404
