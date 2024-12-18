@@ -228,7 +228,37 @@ def show_domains(username):
         return redirect(url_for('show_domains', username=username))
 
     
+@app.route('/domains/<username>/<domain_name>'), methods=['GET', 'DELETE'])
+def show_domain_detail(username, domain_name):
+    if not user_exists(username):
+        return "User not found", 404
+
+    if request.method == 'GET':
+        
+        domain = Domain(domain_name)  # Create a Domain object
     
+        user_data = load_user_data(username)
+        domains = user_data.get("domains", [])
+    
+        if not domains:
+            flash(f"No domains yet", "info")
+            return redirect(url_for('show_domains', username=username))
+    
+        
+        # Check if the domain_name exists in the list of domain names
+        if domain_name not in [domain['name'] for domain in domains]:
+            flash(f"Domain { domain_name } not found", "error")
+            return redirect(url_for('show_domains', username=username))
+    
+        response_file_path = f'scripts/responses/{domain_name}'
+        ssl_info_file_path = f'scripts/ssl_info/{domain_name}'
+        domain.response_last_row = get_last_row(response_file_path)
+        domain.ssl_info_last_row = get_last_row(ssl_info_file_path)
+    
+        whois_dir_for_domain = f'scripts/whois_results/{domain_name}'
+        whois_details = parse_whois_data(whois_dir_for_domain)
+        return render_template('domains_single.html', username=username, domain=domain, whois_details=whois_details)
+
     # Handle DELETE request to delete a domain
     if request.method == 'DELETE':
 
@@ -259,37 +289,6 @@ def show_domains(username):
 
         flash(f"Domain {domain_to_delete} deleted successfully.", "success")
         return redirect(url_for('show_domains', username=username))
-
-
-@app.route('/domains/<username>/<domain_name>')
-def show_domain_detail(username, domain_name):
-    if not user_exists(username):
-        return "User not found", 404
-
-    domain = Domain(domain_name)  # Create a Domain object
-
-    user_data = load_user_data(username)
-    domains = user_data.get("domains", [])
-
-    if not domains:
-        flash(f"No domains yet", "info")
-        return redirect(url_for('show_domains', username=username))
-
-    
-    # Check if the domain_name exists in the list of domain names
-    if domain_name not in [domain['name'] for domain in domains]:
-        flash(f"Domain { domain_name } not found", "error")
-        return redirect(url_for('show_domains', username=username))
-
-    response_file_path = f'scripts/responses/{domain_name}'
-    ssl_info_file_path = f'scripts/ssl_info/{domain_name}'
-    domain.response_last_row = get_last_row(response_file_path)
-    domain.ssl_info_last_row = get_last_row(ssl_info_file_path)
-
-    whois_dir_for_domain = f'scripts/whois_results/{domain_name}'
-    whois_details = parse_whois_data(whois_dir_for_domain)
-    return render_template('domains_single.html', username=username, domain=domain, whois_details=whois_details)
-
 
 # Debug mode and running the app
 if __name__ == "__main__":
