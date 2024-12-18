@@ -25,7 +25,7 @@ apt-get install python3-mysqldb  -y
 apt-get install pkg-config libmysqlclient-dev  -y
 
 # Install mysqlclient
-pip install mysqlclient --global-option=build_ext --global-option="-I/usr/include/mysql" --global-option="-L/usr/lib/x86_64-linux-gnu -lmysqlclient"
+pip install mysqlclient --global-option=build_ext --global-option="-I/usr/include/mysql" --global-option="-L/usr/lib/x86_64-linux-gnu -lmysqlclient" --break-system-packages
 
 # Start MySQL service
 systemctl start mysql
