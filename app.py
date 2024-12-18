@@ -1,6 +1,6 @@
 import os
 import json
-from flask import Flask, request, redirect, url_for, render_template, jsonify, flash
+from flask import Flask, request, redirect, url_for, render_template, jsonify, flash, Response
 import re
 
 app = Flask(__name__)
@@ -113,6 +113,17 @@ def show_domains(username):
     if request.method == 'GET':
         user_data = load_user_data(username)
         domains = user_data.get("domains", [])
+
+        if request.args.get('export') is not None:
+            domain_names = [domain['name'] for domain in domains]
+            text_data = "\n".join(domain_names)
+            return Response(
+                text_data,
+                mimetype="text/plain",
+                headers={"Content-Disposition": "attachment; filename=domain_names.txt"}
+            )
+
+        
         domains_limit = user_data.get("domains_limit", 0)
         
         # Fetch the last row of relevant files for each domain
