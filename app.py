@@ -1,11 +1,16 @@
 import os
 import json
 from flask import Flask, request, redirect, url_for, render_template, jsonify
+import re
 
 app = Flask(__name__)
 
 # Define the base directory for user data
 USER_DATA_DIR = "users"
+
+# Regular expression pattern for a basic domain name validation
+domain_regex = r'^(?:[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?\.)+(?:[A-Za-z0-9-]{2,})$'
+
 
 # Helper function to load user data
 def load_user_data(username):
@@ -94,13 +99,13 @@ def dashboard():
 def login():
     return render_template('login.html')
 
-@app.route('/domains/<username>', methods=['GET', 'POST'])
+@app.route('/domains/<username>', methods=['GET', 'POST', 'DELETE'])
 def show_domains(username):
+    if not user_exists(username):
+        return "User not found", 404
+
     # Handle GET request to display domains
     if request.method == 'GET':
-        if not user_exists(username):
-            return "User not found", 404
-
         user_data = load_user_data(username)
         domains = user_data.get("domains", [])
         
@@ -122,8 +127,6 @@ def show_domains(username):
 
     # Handle POST request to add a domain
     if request.method == 'POST':
-        if not user_exists(username):
-            return "User not found", 404
 
         # Get the domain name from the form data
         domain_name = request.form.get('domain_name')
@@ -131,6 +134,10 @@ def show_domains(username):
         if not domain_name:
             return "Domain name is required", 400
 
+        # Validate the domain format using regex
+        if not re.match(domain_regex, domain_name):
+            return "Invalid domain name format", 400
+        
         # Load the user's existing data
         user_data = load_user_data(username)
 
@@ -149,6 +156,38 @@ def show_domains(username):
             json.dump(user_data, user_file, indent=4)
 
         return redirect(url_for('show_domains', username=username))
+        
+    # Handle DELETE request to delete a domain
+    if request.method == 'DELETE':
+
+        # Get the domain name to delete from form data
+        domain_name = request.form.get('domain_name')
+
+        if not domain_name:
+            return "Domain name is required", 400
+
+        # Load the user's existing data
+        user_data = load_user_data(username)
+
+        # Find the domain and remove it
+        domains = user_data.get("domains", [])
+        domain_to_delete = next((domain for domain in domains if domain['name'] == domain_name), None)
+
+        if not domain_to_delete:
+            return "Domain not found", 404
+
+        # Remove the domain
+        user_data["domains"] = [domain for domain in domains if domain['name'] != domain_name]
+
+        # Save the updated data back to the user's JSON file
+        user_file_path = f"{USER_DATA_DIR}/{username}.json"
+        with open(user_file_path, 'w') as user_file:
+            json.dump(user_data, user_file, indent=4)
+
+        return redirect(url_for('show_domains', username=username))
+
+
+
 
 @app.route('/domains/<username>/<domain_name>')
 def show_domain_detail(username, domain_name):
@@ -156,6 +195,17 @@ def show_domain_detail(username, domain_name):
         return "User not found", 404
 
     domain = Domain(domain_name)  # Create a Domain object
+
+    user_data = load_user_data(username)
+    domains = user_data.get("domains", [])
+
+    if not domains:
+        return "No domains found for user", 404
+
+    # Check if the domain_name exists in the list of domain names
+    if domain_name not in [domain['name'] for domain in domains]:
+        return "Domain not found", 404
+    
     response_file_path = f'scripts/responses/{domain_name}'
     ssl_info_file_path = f'scripts/ssl_info/{domain_name}'
     domain.response_last_row = get_last_row(response_file_path)
@@ -163,7 +213,7 @@ def show_domain_detail(username, domain_name):
 
     whois_dir_for_domain = f'scripts/whois_results/{domain_name}'
     whois_details = parse_whois_data(whois_dir_for_domain)
-    return render_template('domains_single.html', user=username, domain=domain, whois_details=whois_details)
+    return render_template('domains_single.html', username=username, domain=domain, whois_details=whois_details)
 
 
 # Debug mode and running the app
