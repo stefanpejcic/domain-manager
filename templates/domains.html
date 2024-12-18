@@ -255,7 +255,7 @@ document.getElementById('importDomainsForm').addEventListener('submit', function
                             {% if domain.whois_results_last_row %}
                                 {% set status_parts = domain.whois_results_last_row.status.split(' ') %}
                                 {% for part in status_parts %}
-                                    {% if part.startswith('http') %}
+                                    {% if loop.index == 2 and part.startswith('http') %}
                                         <a href="{{ part }}" target="_blank">{{ part }}</a>
                                     {% else %}
                                         {{ part }}
