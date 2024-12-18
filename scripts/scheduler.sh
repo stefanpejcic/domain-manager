@@ -18,7 +18,7 @@ usage() {
     echo "  $ALL                 Run all checks (http_response_check, ssl_check, whois_check) for all domains."
     echo "  $HTTP   Run HTTP response check for each domain."
     echo "  $SSL             Run SSL certificate check for each domain."
-    echo "  #WHOIS           Run WHOIS lookup for each domain."
+    echo "  $WHOIS           Run WHOIS lookup for each domain."
     echo "  username              (Optional) Specify a username to check only that user's domains."
     echo
     echo "This script processes user files and performs checks based on the provided option."
