@@ -1,13 +1,23 @@
 #!/bin/bash
 
-# First argument is the check type
 CHECK_TYPE=$1
-
 SCRIPTS_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 USERS_DIR="${SCRIPTS_DIR}/../users/"
 
 
-# Iterate over each JSON file in the users directory
+usage() {
+    echo "Usage: $0 [--all|http_response_check|ssl_check|whois_check]"
+    echo
+    echo "Options:"
+    echo "  --all                 Run all checks (http_response_check, ssl_check, whois_check) for all domains."
+    echo "  http_response_check   Run HTTP response check for each domain."
+    echo "  ssl_check             Run SSL certificate check for each domain."
+    echo "  whois_check           Run WHOIS lookup for each domain."
+    echo
+    echo "This script processes user files and performs checks based on the provided option."
+}
+
+
 for user_file in $USERS_DIR*.json; do
     DOMAINS=$(jq -r '.domains[].name' "$user_file")
     
@@ -31,7 +41,7 @@ for user_file in $USERS_DIR*.json; do
           ;;
 
         *)
-          echo "Invalid check type specified"
+          usage
           exit 1
           ;;
       esac
