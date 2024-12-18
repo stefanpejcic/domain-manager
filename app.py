@@ -225,8 +225,12 @@ def show_domains(username):
         if skipped_domains_str:
             flash(f"Skipped existing domains: {skipped_domains_str}", "info")
 
-        return redirect(url_for('show_domains', username=username))
-
+        response_data = {
+            "successDomains": added_domains,
+            "skippedDomains": skipped_domains_str
+        }
+        
+        return jsonify(response_data)
     
 @app.route('/domains/<username>/<domain_name>', methods=['GET', 'DELETE'])
 def show_domain_detail(username, domain_name):
