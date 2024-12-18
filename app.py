@@ -167,8 +167,7 @@ def show_domains(username):
             json.dump(user_data, user_file, indent=4)
             
 
-        
-        flash(("Domain added successfully", "success", f"Domain {domain_name} ({ domains_count }/{ domains_limit }) has been added successfully."))
+        flash(("Domain {domain_name} ({domains_count}/{domains_limit}) has been added successfully.", "success"))
         return redirect(url_for('show_domains', username=username))
 
     # Handle PUT request to import a list of domains
