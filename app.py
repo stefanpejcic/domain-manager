@@ -157,7 +157,61 @@ def show_domains(username):
             json.dump(user_data, user_file, indent=4)
 
         return redirect(url_for('show_domains', username=username))
-        
+
+    # Handle PUT request to import a list of domains
+    if request.method == 'PUT':
+        # Get the list of domains from the request body
+        domain_list = request.data.decode('utf-8').strip()
+
+        if not domain_list:
+            return "Domain list is required", 400
+
+        # Split domains by lines or commas
+        domain_names = re.split(r'[,\n]+', domain_list)
+
+        # Validate and process domains
+        user_data = load_user_data(username)
+        existing_domains = {domain['name'] for domain in user_data.get("domains", [])}
+
+        new_domains = []
+        skipped_domains = []
+
+        for domain_name in domain_names:
+            domain_name = domain_name.strip()
+
+            if not domain_name:
+                continue
+
+            # Validate the domain format
+            if not re.match(domain_regex, domain_name):
+                skipped_domains.append({"domain": domain_name, "reason": "Invalid format"})
+                continue
+
+            # Check if the domain already exists
+            if domain_name in existing_domains:
+                skipped_domains.append({"domain": domain_name, "reason": "Already exists"})
+                continue
+
+            # Add the new domain
+            new_domains.append({"name": domain_name, "status": "active"})
+            existing_domains.add(domain_name)
+
+        # Add new domains to the user's data
+        user_data["domains"].extend(new_domains)
+
+        # Save the updated data back to the user's JSON file
+        user_file_path = f"{USER_DATA_DIR}/{username}.json"
+        with open(user_file_path, 'w') as user_file:
+            json.dump(user_data, user_file, indent=4)
+
+        # Build response
+        response = {
+            "added": [domain["name"] for domain in new_domains],
+            "skipped": skipped_domains,
+        }
+        return jsonify(response), 200
+
+    
     # Handle DELETE request to delete a domain
     if request.method == 'DELETE':
 
