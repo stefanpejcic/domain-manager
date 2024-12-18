@@ -253,7 +253,7 @@ document.getElementById('importDomainsForm').addEventListener('submit', function
                       </td>
                       <td class="p-3 text-start">
                             {% if domain.whois_results_last_row %}
-                                {% if 'status' in domain.whois_results_last_row %}
+                                {% if 'Active' in domain.whois_results_last_row.status  or 'ok' in domain.whois_results_last_row.status %}
                                     {{ domain.whois_results_last_row }}
                                 {% else %}
                                     None
@@ -265,7 +265,7 @@ document.getElementById('importDomainsForm').addEventListener('submit', function
                       <td class="p-3 font-medium">
                         <div class="inline-block whitespace-nowrap rounded-full bg-purple-100 px-2 py-1 text-xs font-semibold leading-4 text-purple-800">
                             {% if domain.ssl_info_last_row %}
-                                {% if 'expiration' in domain.ssl_info_last_row %}
+                                {% if 'Expiration' in domain.ssl_info_last_row %}
                                     {{ domain.ssl_info_last_row }}
                                 {% else %}
                                     None
