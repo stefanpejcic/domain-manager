@@ -145,7 +145,7 @@ def show_domains(username):
         domains_count = len(existing_domains)
         domains_limit = user_data.get("domains_limit", 0)
 
-        if domains_count == domains_limit
+        if domains_count == domains_limit:
             return "Reached limit in number of domains", 400
         
         # Check if the domain already exists
