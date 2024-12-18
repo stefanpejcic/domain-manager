@@ -10,21 +10,9 @@ fi
 # Update package list
 apt update
 
-# Install MySQL server
-apt install mysql-server -y
+apt install mysql-server  pkg-config libmysqlclient-dev python3 python3-flask python3-mysqldb pip -y
 
-# Install Python3 and Flask
-apt install python3 -y
-pip install Flask
-pip install flask_sqlalchemy
-
-# Install MySQL client
-apt-get install python3-mysqldb  -y
-
-# Install additional dependencies
-apt-get install pkg-config libmysqlclient-dev  -y
-
-# Install mysqlclient
+pip install Flask flask_sqlalchemy --break-system-packages
 pip install mysqlclient --global-option=build_ext --global-option="-I/usr/include/mysql" --global-option="-L/usr/lib/x86_64-linux-gnu -lmysqlclient" --break-system-packages
 
 # Start MySQL service
@@ -79,3 +67,6 @@ for job in "${CRON_JOBS[@]}"; do
 done
 
 echo "Cron jobs added successfully."
+
+echo ""
+echo "flask run --host 0.0.0.0"
