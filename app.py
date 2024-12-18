@@ -2,6 +2,8 @@ import os
 import json
 from flask import Flask, request, redirect, url_for, render_template, jsonify, flash, Response
 import re
+from datetime import datetime
+
 
 app = Flask(__name__)
 
@@ -117,10 +119,12 @@ def show_domains(username):
         if request.args.get('export') is not None:
             domain_names = [domain['name'] for domain in domains]
             text_data = "\n".join(domain_names)
+            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+            filename = f"{username}_{timestamp}_domains.txt"
             return Response(
                 text_data,
                 mimetype="text/plain",
-                headers={"Content-Disposition": "attachment; filename=domain_names.txt"}
+                headers={"Content-Disposition": f"attachment; filename={filename}"}
             )
 
         
