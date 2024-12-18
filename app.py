@@ -166,7 +166,7 @@ def show_domains(username):
         with open(user_file_path, 'w') as user_file:
             json.dump(user_data, user_file, indent=4)
             
-
+        domains_count += 1 # this one!
         flash(f"Domain {domain_name} ({domains_count}/{domains_limit}) has been added successfully.", "success")
         return redirect(url_for('show_domains', username=username))
 
