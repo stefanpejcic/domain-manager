@@ -265,7 +265,7 @@ def show_domains(username):
         skipped_domains_str = ", ".join([f"{domain['domain']} ({domain['reason']})" for domain in skipped_domains])
     
         if new_domains:
-            flash(f"Successfully imported domains: {added_domains}", "success")
+            flash(f"Successfully imported {len(added_domains)} domains: {added_domains}", "success")
         if skipped_domains_str:
             flash(f"Skipped existing domains: {skipped_domains_str}", "info")
     
