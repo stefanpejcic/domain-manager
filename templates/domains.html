@@ -254,7 +254,7 @@ document.getElementById('importDomainsForm').addEventListener('submit', function
                       <td class="p-3 text-start">
                             {% if domain.whois_results_last_row %}
                                 {% if 'Active' in domain.whois_results_last_row.status  or 'ok' in domain.whois_results_last_row.status %}
-                                    {{ domain.whois_results_last_row }}
+                                    {{ domain.whois_results_last_row.status }}
                                 {% else %}
                                     None
                                 {% endif %}
