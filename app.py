@@ -73,21 +73,38 @@ def parse_whois_data(directory_path):
         lines = file.readlines()
         for line in lines:
             line_lower = line.lower()
+            
+            # Capture Domain Status
             if "domain status" in line_lower:
                 details["status"] = line.split(":", 1)[-1].strip()
+            
+            # Capture DNSSEC
             elif "dnssec" in line_lower:
                 details["dnssec"] = line.split(":", 1)[-1].strip()
+            
+            # Capture Registrar
             elif "registrar" in line_lower:
                 details["registrar"] = line.split(":", 1)[-1].strip()
-            elif "registry expiry date:" in line_lower or "expiration date" in line_lower or "expiry date" in line_lower:
+            
+            # Capture Registry Expiry Date (or variations like Expiration Date, Expiry Date)
+            elif "registry expiry date" in line_lower or "expiration date" in line_lower or "expiry date" in line_lower:
                 details["expiration"] = line.split(":", 1)[-1].strip()
-            elif "name server" in line_lower or "dns:" in line_lower:
+            
+            # Capture Updated Date
+            elif "updated date" in line_lower:
+                details["updated_date"] = line.split(":", 1)[-1].strip()
+            
+            # Capture Creation Date
+            elif "creation date" in line_lower:
+                details["creation_date"] = line.split(":", 1)[-1].strip()
+            
+            # Capture Name Servers
+            elif "name server" in line_lower:
                 dns = line.split(":", 1)[-1].strip()
                 if dns not in details["dns"]:
                     details["dns"].append(dns)
+    
     return details
-
-
 
 
 
