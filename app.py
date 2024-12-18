@@ -103,6 +103,7 @@ def dashboard():
 def login():
     return render_template('login.html')
 
+
 @app.route('/domains/<username>', methods=['GET', 'POST', 'PATCH', 'DELETE'])
 def show_domains(username):
     if not user_exists(username):
@@ -127,6 +128,14 @@ def show_domains(username):
             domain['response_last_row'] = response_last_row
             domain['ssl_info_last_row'] = ssl_info_last_row
             domain['whois_results_last_row'] = whois_results_last_row
+
+        # Check for the 'json' query parameter
+        if request.args.get('json') is not None:
+            return jsonify({
+                "username": username,
+                "domains": domains,
+                "domains_limit": domains_limit
+            })
 
         return render_template('domains.html', username=username, domains=domains, domains_limit=domains_limit)
 
