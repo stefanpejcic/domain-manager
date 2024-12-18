@@ -132,17 +132,17 @@ def show_domains(username):
 
     # Handle POST request to add a domain
     if request.method == 'POST':
-
-        # Get the domain name from the form data
         domain_name = request.form.get('domain_name')
 
         if not domain_name:
-            return "Domain name is required", 400
-
+            flash(f"Domain name is required.", "error")
+            return redirect(url_for('show_domains', username=username))
+            
         # Validate the domain format using regex
         if not re.match(domain_regex, domain_name):
-            return "Invalid domain name format", 400
-        
+            flash(f"Domain {domain_name} is not added - invalid domain name format.", "error")
+            return redirect(url_for('show_domains', username=username))
+            
         # Load the user's existing data
         user_data = load_user_data(username)
         existing_domains = [domain['name'] for domain in user_data.get("domains", [])]
@@ -150,12 +150,12 @@ def show_domains(username):
         domains_limit = user_data.get("domains_limit", 0)
 
         if domains_count == domains_limit:
-            return "Reached limit in number of domains", 400
-        
-        # Check if the domain already exists
+            flash(f"Domain {domain_name} is not added. Reached limit in number of domains ({domains_count}/{domains_limit}).", "error")
+            return redirect(url_for('show_domains', username=username))
         
         if domain_name in existing_domains:
-            return "Domain already exists", 400
+            flash(f"Domain {domain_name} already exists.", "error")
+            return redirect(url_for('show_domains', username=username))
 
         # Add the new domain
         new_domain = {"name": domain_name, "status": "active"}
@@ -176,8 +176,10 @@ def show_domains(username):
         domain_list = request.data.decode('utf-8').strip()
 
         if not domain_list:
-            return "Domain list is required", 400
+            flash(f"Domain list is required for import.", "error")
+            return redirect(url_for('show_domains', username=username))
 
+        
         # Split domains by lines or commas
         domain_names = re.split(r'[,\n]+', domain_list)
 
@@ -216,13 +218,16 @@ def show_domains(username):
         with open(user_file_path, 'w') as user_file:
             json.dump(user_data, user_file, indent=4)
 
-        # Build response
-        response = {
-            "added": [domain["name"] for domain in new_domains],
-            "skipped": skipped_domains,
-        }
-        return jsonify(response), 200
+        added_domains = ", ".join([domain["name"] for domain in new_domains])
+        skipped_domains_str = ", ".join(skipped_domains)
+        
+        flash(f"Successfully imported domains: {added_domains}", "success")
+        if skipped_domains_str:
+            flash(f"Skipped existing domains: {skipped_domains_str}", "info")
 
+        return redirect(url_for('show_domains', username=username))
+
+    
     
     # Handle DELETE request to delete a domain
     if request.method == 'DELETE':
@@ -231,8 +236,9 @@ def show_domains(username):
         domain_name = request.form.get('domain_name')
 
         if not domain_name:
-            return "Domain name is required", 400
-
+            flash(f"Domain name is required.", "error")
+            return redirect(url_for('show_domains', username=username))
+            
         # Load the user's existing data
         user_data = load_user_data(username)
 
@@ -241,8 +247,8 @@ def show_domains(username):
         domain_to_delete = next((domain for domain in domains if domain['name'] == domain_name), None)
 
         if not domain_to_delete:
-            return "Domain not found", 404
-
+            flash(f"Domain not found.", "error")
+            return redirect(url_for('show_domains', username=username))
         # Remove the domain
         user_data["domains"] = [domain for domain in domains if domain['name'] != domain_name]
 
@@ -251,9 +257,8 @@ def show_domains(username):
         with open(user_file_path, 'w') as user_file:
             json.dump(user_data, user_file, indent=4)
 
+        flash(f"Domain {domain_to_delete} deleted successfully.", "success")
         return redirect(url_for('show_domains', username=username))
-
-
 
 
 @app.route('/domains/<username>/<domain_name>')
@@ -267,12 +272,15 @@ def show_domain_detail(username, domain_name):
     domains = user_data.get("domains", [])
 
     if not domains:
-        return "No domains found for user", 404
+        flash(f"No domains yet", "info")
+        return redirect(url_for('show_domains', username=username))
 
+    
     # Check if the domain_name exists in the list of domain names
     if domain_name not in [domain['name'] for domain in domains]:
-        return "Domain not found", 404
-    
+        flash(f"Domain { domain_name } not found", "error")
+        return redirect(url_for('show_domains', username=username))
+
     response_file_path = f'scripts/responses/{domain_name}'
     ssl_info_file_path = f'scripts/ssl_info/{domain_name}'
     domain.response_last_row = get_last_row(response_file_path)
