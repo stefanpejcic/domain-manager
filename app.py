@@ -83,7 +83,7 @@ def parse_whois_data(directory_path):
                 details["dnssec"] = line.split(":", 1)[-1].strip()
             
             # Capture Registrar (Checking for both name and phone/email)
-            elif "registrar" in line_lower:
+            elif "registrar:" in line_lower:
                 registrar_info = line.split(":", 1)[-1].strip()
                 # If registrar info contains a phone number or email, clean it
                 if "@" in registrar_info or "+" in registrar_info:
