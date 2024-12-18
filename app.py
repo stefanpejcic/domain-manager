@@ -217,10 +217,10 @@ def show_domains(username):
         user_file_path = f"{USER_DATA_DIR}/{username}.json"
         with open(user_file_path, 'w') as user_file:
             json.dump(user_data, user_file, indent=4)
-
-        added_domains = ", ".join([domain["name"] for domain in new_domains])
-        skipped_domains_str = ", ".join(skipped_domains)
         
+        added_domains = ", ".join([domain["name"] for domain in new_domains])
+        skipped_domains_str = ", ".join([f"{domain['domain']} ({domain['reason']})" for domain in skipped_domains])
+                
         flash(f"Successfully imported domains: {added_domains}", "success")
         if skipped_domains_str:
             flash(f"Skipped existing domains: {skipped_domains_str}", "info")
