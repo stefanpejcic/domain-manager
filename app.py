@@ -99,7 +99,7 @@ def parse_whois_data(directory_path):
 @app.route('/')
 @app.route('/dashboard')
 def dashboard():
-    return render_template('index.html')
+    return render_template('dashboard.html')
 
 @app.route('/login')
 def login():
