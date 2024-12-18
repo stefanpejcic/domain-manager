@@ -18,33 +18,41 @@ usage() {
 }
 
 
+
+check_domain() {
+    local domain=$1
+    local check_script=$2
+    local timeout=$3
+    if ! timeout "$timeout" bash "$check_script" "$domain"; then
+        echo "$check_script failed for $domain after $timeout seconds"
+    fi
+}
+
 for user_file in $USERS_DIR*.json; do
     DOMAINS=$(jq -r '.domains[].name' "$user_file")
     
     for domain in $DOMAINS; do
-      case $CHECK_TYPE in
-        --all)
-          echo "$domain"
-          bash ${SCRIPTS_DIR}/http_response_check.sh $domain
-          bash ${SCRIPTS_DIR}/ssl_check.sh $domain
-          bash ${SCRIPTS_DIR}/whois_check.sh $domain
-          echo "____________________________________________________________"
-          ;;
-        http_response_check)
-          bash ${SCRIPTS_DIR}/http_response_check.sh $domain
-          ;;
-        ssl_check)
-          bash ${SCRIPTS_DIR}/ssl_check.sh $domain
-          ;;
-        whois_check)
-          bash ${SCRIPTS_DIR}/whois_check.sh $domain
-          ;;
-
-        *)
-          usage
-          exit 1
-          ;;
-      esac
+        echo "$domain"
+        case $CHECK_TYPE in
+            --all)
+                check_domain "$domain" "${SCRIPTS_DIR}/http_response_check.sh" 15
+                check_domain "$domain" "${SCRIPTS_DIR}/ssl_check.sh" 5
+                check_domain "$domain" "${SCRIPTS_DIR}/whois_check.sh" 10
+                ;;
+            http_response_check)
+                check_domain "$domain" "${SCRIPTS_DIR}/http_response_check.sh" 15
+                ;;
+            ssl_check)
+                check_domain "$domain" "${SCRIPTS_DIR}/ssl_check.sh" 5
+                ;;
+            whois_check)
+                check_domain "$domain" "${SCRIPTS_DIR}/whois_check.sh" 10
+                ;;
+            *)
+                usage
+                ;;
+        esac
+        echo "____________________________________________________________"
     done
 done
 
