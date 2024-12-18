@@ -11,6 +11,10 @@ USER_DATA_DIR = "users"
 # Regular expression pattern for a basic domain name validation
 domain_regex = r'^(?:[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?\.)+(?:[A-Za-z0-9-]{2,})$'
 
+import secrets
+app.secret_key = secrets.token_hex(16)
+
+
 
 # Helper function to load user data
 def load_user_data(username):
