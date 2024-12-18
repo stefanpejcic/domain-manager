@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    environment:
+      - FLASK_ENV=development
+      - DB_HOST=db
+      - DB_USER=manager
+      - DB_PASSWORD=ds732bfsd
+      - DB_NAME=domains
+    depends_on:
+      - db
+    volumes:
+      - ./scripts:/app/scripts
+    command: flask run --host=0.0.0.0 --port=5000
+
+  db:
+    image: mysql:8.0
+    container_name: mysql_db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: domains
+      MYSQL_USER: manager
+      MYSQL_PASSWORD: ds732bfsd
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./table_structure.sql:/docker-entrypoint-initdb.d/table_structure.sql:ro
+
+  cron:
+    build:
+      context: ./scripts
+      dockerfile: Dockerfile.cron
+    depends_on:
+      - db
+    volumes:
+      - ./scripts:/scripts
+
+volumes:
+  db_data:
