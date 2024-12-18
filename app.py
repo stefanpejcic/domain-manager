@@ -287,7 +287,7 @@ def show_domain_detail(username, domain_name):
         with open(user_file_path, 'w') as user_file:
             json.dump(user_data, user_file, indent=4)
 
-        flash(f"Domain {domain_to_delete} deleted successfully.", "success")
+        flash(f"Domain {domain_name} deleted successfully.", "success")
         return redirect(url_for('show_domains', username=username))
 
 # Debug mode and running the app
