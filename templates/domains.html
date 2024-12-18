@@ -2,11 +2,10 @@
 
 {% block content %}
 
-
 {% with messages = get_flashed_messages(with_categories=True) %}
   {% if messages %}
     {% for message, category in messages %}
-<!-- Alerts: {{ category }} -->
+      <!-- Alerts: {{ category }} -->
       <div class="
         {% if category == 'success' %}
           rounded bg-emerald-100 p-4 text-emerald-700 md:p-5 dark:bg-emerald-900/75 dark:text-emerald-100
@@ -36,14 +35,16 @@
               <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 112 0v6a1 1 0 11-2 0V7zm0 8a1 1 0 112 0 1 1 0 11-2 0z" clip-rule="evenodd" />
             </svg>
           {% endif %}
-          <h3 class="font-semibold">{{ category }}</h3>
+          <!-- Capitalize category for better readability -->
+          <h3 class="font-semibold">{{ category|capitalize }}</h3>
         </div>
         <p class="ml-8">{{ message }}</p>
       </div>
-<!-- END Alerts: {{ category }} -->
+      <!-- END Alerts: {{ category }} -->
     {% endfor %}
   {% endif %}
 {% endwith %}
+
 
 
 
