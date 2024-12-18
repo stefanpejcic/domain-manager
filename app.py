@@ -1,6 +1,6 @@
 import os
 import json
-from flask import Flask, request, redirect, url_for, render_template, jsonify
+from flask import Flask, request, redirect, url_for, render_template, jsonify, flash
 import re
 
 app = Flask(__name__)
@@ -142,6 +142,12 @@ def show_domains(username):
         # Load the user's existing data
         user_data = load_user_data(username)
 
+        domains_count = len(existing_domains)
+        domains_limit = user_data.get("domains_limit", 0)
+
+        if domains_count == domains_limit
+            return "Reached limit in number of domains", 400
+        
         # Check if the domain already exists
         existing_domains = [domain['name'] for domain in user_data.get("domains", [])]
         if domain_name in existing_domains:
@@ -155,7 +161,10 @@ def show_domains(username):
         user_file_path = f"{USER_DATA_DIR}/{username}.json"
         with open(user_file_path, 'w') as user_file:
             json.dump(user_data, user_file, indent=4)
+            
 
+        
+        flash(("Domain added successfully", "success", f"Domain {domain_name} ({ domains_count }/{ domains_limit }) has been added successfully."))
         return redirect(url_for('show_domains', username=username))
 
     # Handle PUT request to import a list of domains
