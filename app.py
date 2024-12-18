@@ -79,7 +79,7 @@ def parse_whois_data(directory_path):
                 details["dnssec"] = line.split(":", 1)[-1].strip()
             elif "registrar" in line_lower:
                 details["registrar"] = line.split(":", 1)[-1].strip()
-            elif "expiration date" in line_lower or "expiry date" in line_lower:
+            elif "registry expiry date:" in line_lower or "expiration date" in line_lower or "expiry date" in line_lower:
                 details["expiration"] = line.split(":", 1)[-1].strip()
             elif "name server" in line_lower or "dns:" in line_lower:
                 dns = line.split(":", 1)[-1].strip()
