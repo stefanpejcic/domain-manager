@@ -82,13 +82,20 @@ def parse_whois_data(directory_path):
             elif "dnssec" in line_lower:
                 details["dnssec"] = line.split(":", 1)[-1].strip()
             
-            # Capture Registrar
+            # Capture Registrar (Checking for both name and phone/email)
             elif "registrar" in line_lower:
-                details["registrar"] = line.split(":", 1)[-1].strip()
+                registrar_info = line.split(":", 1)[-1].strip()
+                # If registrar info contains a phone number or email, clean it
+                if "@" in registrar_info or "+" in registrar_info:
+                    details["registrar"] = registrar_info
+                else:
+                    details["registrar"] = registrar_info
             
             # Capture Registry Expiry Date (or variations like Expiration Date, Expiry Date)
             elif "registry expiry date" in line_lower or "expiration date" in line_lower or "expiry date" in line_lower:
-                details["expiration"] = line.split(":", 1)[-1].strip()
+                expiration = line.split(":", 1)[-1].strip()
+                if "the" not in expiration:  # To avoid invalid "The expiration date" message
+                    details["expiration"] = expiration
             
             # Capture Updated Date
             elif "updated date" in line_lower:
@@ -101,10 +108,12 @@ def parse_whois_data(directory_path):
             # Capture Name Servers
             elif "name server" in line_lower:
                 dns = line.split(":", 1)[-1].strip()
-                if dns not in details["dns"]:
+                if dns not in details.get("dns", []):
+                    if "dns" not in details:
+                        details["dns"] = []
                     details["dns"].append(dns)
     
-    return details
+        return details
 
 
 
