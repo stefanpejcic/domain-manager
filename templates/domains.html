@@ -118,8 +118,8 @@
               <label class="block mb-2 text-xs font-bold tracking-wide text-gray-700 uppercase" for="domain_list">
                 Domains
               </label>
-              <input class="block w-full px-4 py-3 leading-tight text-gray-700 bg-gray-200 border border-gray-200 rounded appearance-none focus:outline-none focus:bg-white focus:border-gray-500" id="domain_list" name="domain_list" type="textarea" placeholder="example.net,another.com">
-            </div>
+      <textarea class="block w-full px-4 py-3 leading-tight text-gray-700 bg-gray-200 border border-gray-200 rounded appearance-none focus:outline-none focus:bg-white focus:border-gray-500" id="domains" name="domains" placeholder="example.net,another.com"></textarea>
+                          </div>
           </div>
           <div class="flex justify-end p-6 border-t border-solid border-blueGray-200 rounded-b">
             <button class="px-6 py-2 mb-1 mr-1 text-sm font-bold text-red-500 uppercase transition-all duration-150 ease-linear bg-transparent border border-solid rounded outline-none focus:outline-none" type="button" onclick="toggleModal('addDomainModal')">
@@ -138,17 +138,20 @@
 <script>
   document.getElementById('importDomainsForm').addEventListener('submit', function(event) {
     event.preventDefault();
-    const formData = new FormData(this);  // Create FormData object from the form
+    const domains = document.getElementById('domains').value.trim();
     fetch('/domains/{{ username }}', {
-      method: 'PUT',  // Specify the PUT method
-      body: formData  // Attach the form data
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'text/plain',
+      },
+      body: domains,
     })
-    .then(response => response.json())  // Assuming the response is JSON
+    .then(response => response.json())
     .then(data => {
-      console.log('Success:', data);  // Handle the success response
+      console.log('Success:', data);
     })
     .catch(error => {
-      console.error('Error:', error);  // Handle any errors
+      console.error('Error:', error);
     });
   });
 </script>
