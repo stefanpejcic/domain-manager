@@ -124,7 +124,7 @@ def show_domains(username):
             domain['ssl_info_last_row'] = ssl_info_last_row
             domain['whois_results_last_row'] = whois_results_last_row
 
-        return render_template('domains.html', username=username, domains=domains, domains_limit)
+        return render_template('domains.html', username=username, domains=domains, domains_limit=domains_limit)
 
     # Handle POST request to add a domain
     if request.method == 'POST':
