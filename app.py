@@ -103,7 +103,7 @@ def dashboard():
 def login():
     return render_template('login.html')
 
-@app.route('/domains/<username>', methods=['GET', 'POST', 'PUT', 'DELETE'])
+@app.route('/domains/<username>', methods=['GET', 'POST', 'PATCH', 'DELETE'])
 def show_domains(username):
     if not user_exists(username):
         return "User not found", 404
@@ -170,8 +170,8 @@ def show_domains(username):
         flash(f"Domain {domain_name} ({domains_count}/{domains_limit}) has been added successfully.", "success")
         return redirect(url_for('show_domains', username=username))
 
-    # Handle PUT request to import a list of domains
-    if request.method == 'PUT':
+    # Handle PATCH request to import a list of domains
+    if request.method == 'PATCH':
         # Get the list of domains from the request body
         domain_list = request.data.decode('utf-8').strip()
     
