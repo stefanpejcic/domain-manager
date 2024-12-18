@@ -1,18 +1,24 @@
 #!/bin/bash
 
 CHECK_TYPE=$1
-USERNAME=$2  # Accept an optional second argument for the username
+USERNAME=$2 
 SCRIPTS_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 USERS_DIR="${SCRIPTS_DIR}/../users/"
 
+# valid check types
+$ALL="--all"
+$HTTP="http_response_check"
+$SSL="ssl_check"
+$WHOIS="whois_check"
+
 usage() {
-    echo "Usage: $0 [--all|http_response_check|ssl_check|whois_check] [username]"
+    echo "Usage: $0 [$ALL|$HTTP|$SSL|$WHOIS] [username]"
     echo
     echo "Options:"
-    echo "  --all                 Run all checks (http_response_check, ssl_check, whois_check) for all domains."
-    echo "  http_response_check   Run HTTP response check for each domain."
-    echo "  ssl_check             Run SSL certificate check for each domain."
-    echo "  whois_check           Run WHOIS lookup for each domain."
+    echo "  $ALL                 Run all checks (http_response_check, ssl_check, whois_check) for all domains."
+    echo "  $HTTP   Run HTTP response check for each domain."
+    echo "  $SSL             Run SSL certificate check for each domain."
+    echo "  #WHOIS           Run WHOIS lookup for each domain."
     echo "  username              (Optional) Specify a username to check only that user's domains."
     echo
     echo "This script processes user files and performs checks based on the provided option."
@@ -27,6 +33,13 @@ check_domain() {
         echo "ERROR: $script_name failed for $domain after $timeout seconds"
     fi
 }
+
+
+
+if [[ "$CHECK_TYPE" != "$ALL" && "$CHECK_TYPE" != "$HTTP" && "$CHECK_TYPE" != "$SSL" && "$CHECK_TYPE" != "$WHOIS" ]]; then
+    usage
+    exit 1
+fi
 
 if [ -n "$USERNAME" ]; then
     # If a username is provided, find the user file that matches
@@ -46,19 +59,19 @@ fi
 for domain in $DOMAINS; do
     echo "$domain"
     case $CHECK_TYPE in
-        --all)
-            check_domain "$domain" "${SCRIPTS_DIR}/http_response_check.sh" 15
-            check_domain "$domain" "${SCRIPTS_DIR}/ssl_check.sh" 5
-            check_domain "$domain" "${SCRIPTS_DIR}/whois_check.sh" 10
+        $ALL)
+            check_domain "$domain" "${SCRIPTS_DIR}/$HTTP.sh" 15
+            check_domain "$domain" "${SCRIPTS_DIR}/$SSL.sh" 5
+            check_domain "$domain" "${SCRIPTS_DIR}/$WHOIS.sh" 10
             ;;
-        http_response_check)
-            check_domain "$domain" "${SCRIPTS_DIR}/http_response_check.sh" 15
+        $HTTP)
+            check_domain "$domain" "${SCRIPTS_DIR}/$HTTP.sh" 15
             ;;
-        ssl_check)
-            check_domain "$domain" "${SCRIPTS_DIR}/ssl_check.sh" 5
+        $SSL)
+            check_domain "$domain" "${SCRIPTS_DIR}/$SSL.sh" 5
             ;;
-        whois_check)
-            check_domain "$domain" "${SCRIPTS_DIR}/whois_check.sh" 10
+        $SHOIS)
+            check_domain "$domain" "${SCRIPTS_DIR}/$WHOIS.sh" 10
             ;;
         *)
             usage
