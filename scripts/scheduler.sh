@@ -24,6 +24,12 @@ usage() {
     echo "This script processes user files and performs checks based on the provided option."
 }
 
+help() {
+    echo "This script processes user files and performs SSL, WHOIS or HTTP response checks for user domains."
+    echo ""
+    usage
+}
+
 check_domain() {
     local domain=$1
     local check_script=$2
@@ -35,7 +41,9 @@ check_domain() {
 }
 
 
-
+if [ "$CHECK_TYPE" == "help" ]; then
+    help
+    exit 0
 if [[ "$CHECK_TYPE" != "$ALL" && "$CHECK_TYPE" != "$HTTP" && "$CHECK_TYPE" != "$SSL" && "$CHECK_TYPE" != "$WHOIS" ]]; then
     usage
     exit 1
