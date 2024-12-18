@@ -506,7 +506,7 @@ function deleteDomain(domainName) {
     const formData = new FormData();
     formData.append('domain_name', domainName);
 
-    fetch(`/domains/{{ username }}`, {
+    fetch(`/domains/{{ username }}/domainName`, {
         method: 'DELETE',
         body: formData
     })
