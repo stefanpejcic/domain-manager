@@ -257,9 +257,13 @@ document.getElementById('importDomainsForm').addEventListener('submit', function
                             {% for part in status_parts %}
                                 {% if loop.index == 2 and part.startswith('http') %}
                                     {% if 'ok' in status_parts[0] or 'Active' in status_parts[0] %}
-                                    <a href="{{ part }}" target="_blank">Active</a>
+                                    <div class="inline-block whitespace-nowrap rounded-full bg-emerald-100 px-2 py-1 text-xs font-semibold leading-4 text-emerald-800">
+                                       <a href="{{ part }}" target="_blank">Active</a>
+                                    </div>
                                     {% else %}
-                                    <a href="{{ part }}" target="_blank">{{ status_parts[0] }}</a>
+                                    <div class="inline-block whitespace-nowrap rounded-full bg-orange-100 px-2 py-1 text-xs font-semibold leading-4 text-orange-800">
+                                        <a href="{{ part }}" target="_blank">{{ status_parts[0] }}</a>
+                                    </div>
                                     {% endif %}
                                 {% endif %}
                             {% endfor %}
