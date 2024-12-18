@@ -108,6 +108,7 @@ def show_domains(username):
     if request.method == 'GET':
         user_data = load_user_data(username)
         domains = user_data.get("domains", [])
+        domains_limit = user_data.get("domains_limit", 0)
         
         # Fetch the last row of relevant files for each domain
         for domain in domains:
@@ -123,7 +124,7 @@ def show_domains(username):
             domain['ssl_info_last_row'] = ssl_info_last_row
             domain['whois_results_last_row'] = whois_results_last_row
 
-        return render_template('domains.html', username=username, domains=domains)
+        return render_template('domains.html', username=username, domains=domains, domains_limit)
 
     # Handle POST request to add a domain
     if request.method == 'POST':
