@@ -228,7 +228,7 @@ def show_domains(username):
         return redirect(url_for('show_domains', username=username))
 
     
-@app.route('/domains/<username>/<domain_name>'), methods=['GET', 'DELETE'])
+@app.route('/domains/<username>/<domain_name>', methods=['GET', 'DELETE'])
 def show_domain_detail(username, domain_name):
     if not user_exists(username):
         return "User not found", 404
